@@ -25,8 +25,15 @@ async function getBooks(apiUrl: string): Promise<Book[]> {
     try {
         const books = await getBooks(apiUrl);
 
-        const sectionElement = document.createElement('section');
-        sectionElement.classList.add('book-section');
+        const wrapperElement = document.querySelector('.wrapper');
+        // checking if wrapperElement exist
+        if (!wrapperElement) {
+            console.error("Wrapper element not found.");
+            return;
+        }
+
+        const booksWrapper = document.createElement('section');
+        booksWrapper.classList.add('book-list');
 
         books.forEach(book => {
             const articleElement = document.createElement('article');
@@ -34,22 +41,23 @@ async function getBooks(apiUrl: string): Promise<Book[]> {
 
             const titleElement = document.createElement('h2');
             titleElement.textContent = book.title;
-            titleElement.classList.add('book-title')
+            titleElement.classList.add('book__title')
             articleElement.append(titleElement);
 
             const authorElement = document.createElement('p');
             authorElement.textContent = book.author;
-            authorElement.classList.add('book-author');
+            authorElement.classList.add('book__author');
             articleElement.append(authorElement);
 
-            sectionElement.appendChild(articleElement);
-        })
+            booksWrapper.appendChild(articleElement);
+        });
 
-        document.body.appendChild(sectionElement);
+        wrapperElement.append(booksWrapper);
 
         const mainTitle = document.createElement('h1');
         mainTitle.textContent = `${books.length} Classic Childrens books`;
-        document.body.insertBefore(mainTitle,sectionElement)
+        mainTitle.classList.add('main-title');
+        wrapperElement.insertBefore(mainTitle, booksWrapper);
 
         console.log("Books:", books);
     } catch (error) {

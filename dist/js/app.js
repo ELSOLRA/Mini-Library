@@ -31,25 +31,30 @@ function getBooks(apiUrl) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const books = yield getBooks(apiUrl);
-            const sectionElement = document.createElement('section');
-            sectionElement.classList.add('book-section');
+            const wrapperElement = document.querySelector('.wrapper');
+            if (!wrapperElement) {
+                console.error("Wrapper element not found.");
+                return;
+            }
+            const booksWrapper = document.createElement('section');
+            booksWrapper.classList.add('book-list');
             books.forEach(book => {
                 const articleElement = document.createElement('article');
                 articleElement.classList.add('book');
                 const titleElement = document.createElement('h2');
                 titleElement.textContent = book.title;
-                titleElement.classList.add('book-title');
+                titleElement.classList.add('book__title');
                 articleElement.append(titleElement);
                 const authorElement = document.createElement('p');
                 authorElement.textContent = book.author;
-                authorElement.classList.add('book-author');
+                authorElement.classList.add('book__author');
                 articleElement.append(authorElement);
-                sectionElement.appendChild(articleElement);
+                booksWrapper.appendChild(articleElement);
             });
-            document.body.appendChild(sectionElement);
+            wrapperElement.append(booksWrapper);
             const mainTitle = document.createElement('h1');
             mainTitle.textContent = `${books.length} Classic Childrens books`;
-            document.body.insertBefore(mainTitle, sectionElement);
+            wrapperElement.insertBefore(mainTitle, booksWrapper);
             console.log("Books:", books);
         }
         catch (error) {
