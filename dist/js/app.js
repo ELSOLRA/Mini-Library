@@ -39,20 +39,22 @@ function getBooks(apiUrl) {
             const booksWrapper = document.createElement('section');
             booksWrapper.classList.add('book-list');
             books.forEach(book => {
-                const articleElement = document.createElement('article');
-                articleElement.classList.add('book');
+                const bookElement = document.createElement('article');
+                bookElement.classList.add('book');
+                const bookBackgroundColor = book.color || '#fff';
+                bookElement.style.backgroundColor = bookBackgroundColor;
                 const titleElement = document.createElement('h2');
                 titleElement.textContent = book.title;
                 titleElement.classList.add('book__title');
-                articleElement.append(titleElement);
+                bookElement.append(titleElement);
                 const authorElement = document.createElement('p');
                 authorElement.textContent = book.author;
                 authorElement.classList.add('book__author');
-                articleElement.append(authorElement);
-                articleElement.addEventListener('click', () => {
+                bookElement.append(authorElement);
+                bookElement.addEventListener('click', () => {
                     showOverlay(book);
                 });
-                booksWrapper.appendChild(articleElement);
+                booksWrapper.appendChild(bookElement);
             });
             wrapperElement.append(booksWrapper);
             const mainTitle = document.createElement('h1');

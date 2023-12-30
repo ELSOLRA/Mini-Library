@@ -3,6 +3,7 @@ const apiUrl: string = 'https://my-json-server.typicode.com/zocom-christoffer-wa
 interface Book {
     title: string;
     author: string;
+    color: string;
 }
 
 async function getBooks(apiUrl: string): Promise<Book[]> {
@@ -36,24 +37,33 @@ async function getBooks(apiUrl: string): Promise<Book[]> {
         booksWrapper.classList.add('book-list');
 
         books.forEach(book => {
-            const articleElement = document.createElement('article');
-            articleElement.classList.add('book');
+            const bookElement = document.createElement('article');
+            bookElement.classList.add('book');
+
+            const bookBackgroundColor = book.color || '#fff' ;
+            bookElement.style.backgroundColor = bookBackgroundColor;
+
+
+/*             const figureElement = document.createElement('figure');
+            figureElement.classList.add('book__cover');
+            bookElement.append(figureElement);
+            figureElement.style.background = 'black'; */
 
             const titleElement = document.createElement('h2');
             titleElement.textContent = book.title;
             titleElement.classList.add('book__title')
-            articleElement.append(titleElement);
+            bookElement.append(titleElement);
 
             const authorElement = document.createElement('p');
             authorElement.textContent = book.author;
             authorElement.classList.add('book__author');
-            articleElement.append(authorElement);
+            bookElement.append(authorElement);
 
-            articleElement.addEventListener('click', () => {
+            bookElement.addEventListener('click', () => {
                 showOverlay(book);
             });
 
-            booksWrapper.appendChild(articleElement);
+            booksWrapper.appendChild(bookElement);
         });
 
         wrapperElement.append(booksWrapper);
