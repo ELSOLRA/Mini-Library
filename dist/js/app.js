@@ -49,11 +49,15 @@ function getBooks(apiUrl) {
                 authorElement.textContent = book.author;
                 authorElement.classList.add('book__author');
                 articleElement.append(authorElement);
+                articleElement.addEventListener('click', () => {
+                    showOverlay(book);
+                });
                 booksWrapper.appendChild(articleElement);
             });
             wrapperElement.append(booksWrapper);
             const mainTitle = document.createElement('h1');
             mainTitle.textContent = `${books.length} Classic Childrens books`;
+            mainTitle.classList.add('main-title');
             wrapperElement.insertBefore(mainTitle, booksWrapper);
             console.log("Books:", books);
         }
@@ -62,3 +66,35 @@ function getBooks(apiUrl) {
         }
     });
 })();
+function showOverlay(clickedBook) {
+    const overlay = createOverlay(clickedBook);
+    document.body.append(overlay);
+}
+function overlayContent(book) {
+    const overlayContent = document.createElement('div');
+    overlayContent.classList.add('overlay-content');
+    const returnButton = document.createElement('button');
+    returnButton.textContent = '\u2190';
+    returnButton.classList.add('overlay__return-button');
+    returnButton.addEventListener('click', () => {
+        var _a;
+        (_a = overlayContent.parentElement) === null || _a === void 0 ? void 0 : _a.remove();
+    });
+    overlayContent.append(returnButton);
+    const overlayTitle = document.createElement('h2');
+    overlayTitle.textContent = book.title;
+    overlayTitle.classList.add('overlay__title');
+    overlayContent.append(overlayTitle);
+    const overlayAuthor = document.createElement('p');
+    overlayAuthor.textContent = book.author;
+    overlayAuthor.classList.add('overlay__author');
+    overlayContent.append(overlayAuthor);
+    return overlayContent;
+}
+function createOverlay(book) {
+    const overlay = document.createElement('section');
+    overlay.classList.add('overlay');
+    const overlayContentElement = overlayContent(book);
+    overlay.append(overlayContentElement);
+    return overlay;
+}
