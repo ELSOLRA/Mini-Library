@@ -27,6 +27,25 @@ function getBooks(apiUrl) {
     });
 }
 ;
+function getBookDetails(book) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield fetch(`${apiUrl}/${book.id}`);
+            if (!response.ok) {
+                throw new Error(`HTTP Error!: ${response.status}`);
+            }
+            ;
+            const bookDetails = yield response.json();
+            console.log(bookDetails);
+            return bookDetails;
+        }
+        catch (error) {
+            console.error("Error fetching book details:", error);
+            throw error;
+        }
+        ;
+    });
+}
 function createBookElement(book) {
     const bookElement = document.createElement('article');
     bookElement.classList.add('book');
@@ -74,11 +93,14 @@ function createBookElement(book) {
     });
 })();
 function showOverlay(clickedBook) {
-    const overlay = createOverlay(clickedBook);
-    document.body.append(overlay);
+    return __awaiter(this, void 0, void 0, function* () {
+        const bookDetails = yield getBookDetails(clickedBook);
+        const overlay = createOverlay(clickedBook, bookDetails);
+        document.body.append(overlay);
+    });
 }
-function overlayContent(book) {
-    const overlayContent = document.createElement('div');
+function overlayContent(book, bookDetails) {
+    const overlayContent = document.createElement('article');
     overlayContent.classList.add('overlay-content');
     const returnButton = document.createElement('button');
     returnButton.textContent = '\u2190';
@@ -88,14 +110,37 @@ function overlayContent(book) {
         (_a = overlayContent.parentElement) === null || _a === void 0 ? void 0 : _a.remove();
     });
     overlayContent.append(returnButton);
+    const leftSideContainer = document.createElement('section');
+    leftSideContainer.classList.add('overlay-content__left-side');
     const bookElement = createBookElement(book);
-    overlayContent.append(bookElement);
+    leftSideContainer.append(bookElement);
+    overlayContent.append(leftSideContainer);
+    const rightSideContainer = document.createElement('section');
+    rightSideContainer.classList.add('overlay-content__right-side');
+    const detailsSection = showBookDetails(bookDetails);
+    rightSideContainer.append(detailsSection);
+    overlayContent.append(rightSideContainer);
     return overlayContent;
 }
-function createOverlay(book) {
+function createOverlay(book, bookDetails) {
     const overlay = document.createElement('section');
     overlay.classList.add('overlay');
-    const overlayContentElement = overlayContent(book);
+    const overlayContentElement = overlayContent(book, bookDetails);
     overlay.append(overlayContentElement);
     return overlay;
+}
+function showBookDetails(bookDetails) {
+    const detailsContainer = document.createElement('section');
+    detailsContainer.classList.add('overlay-content__details-container');
+    const titleElement = document.createElement('h2');
+    titleElement.textContent = bookDetails.title;
+    titleElement.classList.add('overlay-content__title');
+    detailsContainer.appendChild(titleElement);
+    const authorElement = document.createElement('p');
+    authorElement.textContent = `By ${bookDetails.author}`;
+    detailsContainer.appendChild(authorElement);
+    const descriptionElement = document.createElement('p');
+    descriptionElement.textContent = bookDetails.plot;
+    detailsContainer.appendChild(descriptionElement);
+    return detailsContainer;
 }

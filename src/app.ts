@@ -1,9 +1,23 @@
 const apiUrl: string = 'https://my-json-server.typicode.com/zocom-christoffer-wallenberg/books-api/books'
 
 interface Book {
+    id: number;
     title: string;
     author: string;
     color: string;
+  
+}
+
+interface BookDetails {
+    title: string;
+    author: string;
+    plot: string;
+    details: {
+        audience: string;
+        firstPublished: number;
+        pages: number;
+        publisher: string;
+    };
 }
 
 async function getBooks(apiUrl: string): Promise<Book[]> {
@@ -21,6 +35,22 @@ async function getBooks(apiUrl: string): Promise<Book[]> {
         throw error;
     };
 };
+
+async function getBookDetails(book: Book): Promise<BookDetails> {
+    try {
+        const response = await fetch(`${apiUrl}/${book.id}`);
+        if (!response.ok) {
+            throw new Error(`HTTP Error!: ${response.status}`);
+        };
+        const bookDetails: BookDetails = await response.json();
+        console.log(bookDetails);
+        return bookDetails;
+        
+    } catch (error) {
+        console.error("Error fetching book details:", error);
+        throw error;
+    };
+}
 
 
 function createBookElement(book: Book): HTMLElement {
@@ -85,15 +115,15 @@ function createBookElement(book: Book): HTMLElement {
     }
 })();
 
-function showOverlay(clickedBook: Book) {
-
-    const overlay = createOverlay(clickedBook);
+async function showOverlay(clickedBook: Book) {
+    const bookDetails = await getBookDetails(clickedBook);
+    const overlay = createOverlay(clickedBook, bookDetails);
     document.body.append(overlay);
 
 }
 
-function overlayContent(book: Book): HTMLElement {
-    const overlayContent = document.createElement('div');
+function overlayContent(book: Book, bookDetails: BookDetails): HTMLElement {
+    const overlayContent = document.createElement('article');
     overlayContent.classList.add('overlay-content');
 
     const returnButton = document.createElement('button');
@@ -106,24 +136,60 @@ function overlayContent(book: Book): HTMLElement {
 
     overlayContent.append(returnButton);
 
+    const leftSideContainer = document.createElement('section');
+    leftSideContainer.classList.add('overlay-content__left-side');
+
     const bookElement = createBookElement(book);
-    overlayContent.append(bookElement);
-  
+    leftSideContainer.append(bookElement);
+
+    overlayContent.append(leftSideContainer);
+
+    const rightSideContainer = document.createElement('section');
+    rightSideContainer.classList.add('overlay-content__right-side');
+
+    const detailsSection = showBookDetails(bookDetails);
+    rightSideContainer.append(detailsSection);
+
+    overlayContent.append(rightSideContainer);
+
+
+
 
     return overlayContent;
 
 }
 
 
-function createOverlay(book: Book): HTMLElement {
+function createOverlay(book: Book, bookDetails: BookDetails): HTMLElement {
     const overlay = document.createElement('section');
     overlay.classList.add('overlay');
-    const overlayContentElement = overlayContent(book);
+    const overlayContentElement = overlayContent(book, bookDetails);
     overlay.append(overlayContentElement);
 
     return overlay;
 }
 
 
+function showBookDetails(bookDetails: BookDetails): HTMLElement {
+   
+    const detailsContainer = document.createElement('section');
+    detailsContainer.classList.add('overlay-content__details-container');
+    
+    const titleElement = document.createElement('h2');
+    titleElement.textContent = bookDetails.title;
+    titleElement.classList.add('overlay-content__title');
+    detailsContainer.appendChild(titleElement);
+
+    const authorElement = document.createElement('p');
+    authorElement.textContent = `By ${bookDetails.author}`;
+    detailsContainer.appendChild(authorElement);
+
+    const descriptionElement = document.createElement('p');
+    descriptionElement.textContent = bookDetails.plot;
+    detailsContainer.appendChild(descriptionElement);
+
+    return detailsContainer;
+
+}
 
 
