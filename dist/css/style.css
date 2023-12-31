@@ -57,6 +57,9 @@ body {
     transform: scale(1.05); 
 }
 
+.overlay-content .book  {
+    transform: none;
+}
 
 .overlay {
     position: fixed;

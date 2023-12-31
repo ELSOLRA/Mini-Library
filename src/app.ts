@@ -22,6 +22,30 @@ async function getBooks(apiUrl: string): Promise<Book[]> {
     };
 };
 
+
+function createBookElement(book: Book): HTMLElement {
+
+    const bookElement = document.createElement('article');
+    bookElement.classList.add('book');
+
+    const bookBackgroundColor = book.color || '#fff' ;
+    bookElement.style.background = `
+    linear-gradient(208deg, rgba(255, 255, 255, 0.50) 0%, rgba(255, 255, 255, 0.00) 92.13%), ${bookBackgroundColor}`;
+
+    const titleElement = document.createElement('h2');
+    titleElement.textContent = book.title;
+    titleElement.classList.add('book__title')
+    bookElement.append(titleElement);
+
+    const authorElement = document.createElement('p');
+    authorElement.textContent = book.author;
+    authorElement.classList.add('book__author');
+    bookElement.append(authorElement);
+
+    return bookElement;
+
+}
+
 (async function showBooks() {
     try {
         const books = await getBooks(apiUrl);
@@ -37,28 +61,9 @@ async function getBooks(apiUrl: string): Promise<Book[]> {
         booksWrapper.classList.add('book-list');
 
         books.forEach(book => {
-            const bookElement = document.createElement('article');
-            bookElement.classList.add('book');
 
-            const bookBackgroundColor = book.color || '#fff' ;
-            bookElement.style.backgroundColor = bookBackgroundColor;
-
-
-/*             const figureElement = document.createElement('figure');
-            figureElement.classList.add('book__cover');
-            bookElement.append(figureElement);
-            figureElement.style.background = 'black'; */
-
-            const titleElement = document.createElement('h2');
-            titleElement.textContent = book.title;
-            titleElement.classList.add('book__title')
-            bookElement.append(titleElement);
-
-            const authorElement = document.createElement('p');
-            authorElement.textContent = book.author;
-            authorElement.classList.add('book__author');
-            bookElement.append(authorElement);
-
+            const bookElement = createBookElement(book);
+            
             bookElement.addEventListener('click', () => {
                 showOverlay(book);
             });
@@ -101,15 +106,9 @@ function overlayContent(book: Book): HTMLElement {
 
     overlayContent.append(returnButton);
 
-    const overlayTitle = document.createElement('h2');
-    overlayTitle.textContent = book.title;
-    overlayTitle.classList.add('overlay__title');
-    overlayContent.append(overlayTitle);
-
-    const overlayAuthor = document.createElement('p');
-    overlayAuthor.textContent = book.author;
-    overlayAuthor.classList.add('overlay__author');
-    overlayContent.append(overlayAuthor);
+    const bookElement = createBookElement(book);
+    overlayContent.append(bookElement);
+  
 
     return overlayContent;
 

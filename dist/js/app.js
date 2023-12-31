@@ -27,6 +27,22 @@ function getBooks(apiUrl) {
     });
 }
 ;
+function createBookElement(book) {
+    const bookElement = document.createElement('article');
+    bookElement.classList.add('book');
+    const bookBackgroundColor = book.color || '#fff';
+    bookElement.style.background = `
+    linear-gradient(208deg, rgba(255, 255, 255, 0.50) 0%, rgba(255, 255, 255, 0.00) 92.13%), ${bookBackgroundColor}`;
+    const titleElement = document.createElement('h2');
+    titleElement.textContent = book.title;
+    titleElement.classList.add('book__title');
+    bookElement.append(titleElement);
+    const authorElement = document.createElement('p');
+    authorElement.textContent = book.author;
+    authorElement.classList.add('book__author');
+    bookElement.append(authorElement);
+    return bookElement;
+}
 (function showBooks() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -39,18 +55,7 @@ function getBooks(apiUrl) {
             const booksWrapper = document.createElement('section');
             booksWrapper.classList.add('book-list');
             books.forEach(book => {
-                const bookElement = document.createElement('article');
-                bookElement.classList.add('book');
-                const bookBackgroundColor = book.color || '#fff';
-                bookElement.style.backgroundColor = bookBackgroundColor;
-                const titleElement = document.createElement('h2');
-                titleElement.textContent = book.title;
-                titleElement.classList.add('book__title');
-                bookElement.append(titleElement);
-                const authorElement = document.createElement('p');
-                authorElement.textContent = book.author;
-                authorElement.classList.add('book__author');
-                bookElement.append(authorElement);
+                const bookElement = createBookElement(book);
                 bookElement.addEventListener('click', () => {
                     showOverlay(book);
                 });
@@ -83,14 +88,8 @@ function overlayContent(book) {
         (_a = overlayContent.parentElement) === null || _a === void 0 ? void 0 : _a.remove();
     });
     overlayContent.append(returnButton);
-    const overlayTitle = document.createElement('h2');
-    overlayTitle.textContent = book.title;
-    overlayTitle.classList.add('overlay__title');
-    overlayContent.append(overlayTitle);
-    const overlayAuthor = document.createElement('p');
-    overlayAuthor.textContent = book.author;
-    overlayAuthor.classList.add('overlay__author');
-    overlayContent.append(overlayAuthor);
+    const bookElement = createBookElement(book);
+    overlayContent.append(bookElement);
     return overlayContent;
 }
 function createOverlay(book) {
