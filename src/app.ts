@@ -90,16 +90,16 @@ function createBookElement(book: Book): HTMLElement {
         const booksWrapper = document.createElement('section');
         booksWrapper.classList.add('book-list');
 
-        books.forEach(book => {
-
+        for (const book of books) {
             const bookElement = createBookElement(book);
             
-            bookElement.addEventListener('click', () => {
-                showOverlay(book);
+            bookElement.addEventListener('click', async () => {
+                const bookDetails = await getBookDetails(book);
+                showOverlay(book, bookDetails);
             });
 
             booksWrapper.appendChild(bookElement);
-        });
+        };
 
         wrapperElement.append(booksWrapper);
 
@@ -115,8 +115,7 @@ function createBookElement(book: Book): HTMLElement {
     }
 })();
 
-async function showOverlay(clickedBook: Book) {
-    const bookDetails = await getBookDetails(clickedBook);
+async function showOverlay(clickedBook: Book, bookDetails: BookDetails ) {
     const overlay = createOverlay(clickedBook, bookDetails);
     document.body.append(overlay);
 

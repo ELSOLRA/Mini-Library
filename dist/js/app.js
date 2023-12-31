@@ -73,13 +73,15 @@ function createBookElement(book) {
             }
             const booksWrapper = document.createElement('section');
             booksWrapper.classList.add('book-list');
-            books.forEach(book => {
+            for (const book of books) {
                 const bookElement = createBookElement(book);
-                bookElement.addEventListener('click', () => {
-                    showOverlay(book);
-                });
+                bookElement.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
+                    const bookDetails = yield getBookDetails(book);
+                    showOverlay(book, bookDetails);
+                }));
                 booksWrapper.appendChild(bookElement);
-            });
+            }
+            ;
             wrapperElement.append(booksWrapper);
             const mainTitle = document.createElement('h1');
             mainTitle.textContent = `${books.length} Classic Childrens books`;
@@ -92,9 +94,8 @@ function createBookElement(book) {
         }
     });
 })();
-function showOverlay(clickedBook) {
+function showOverlay(clickedBook, bookDetails) {
     return __awaiter(this, void 0, void 0, function* () {
-        const bookDetails = yield getBookDetails(clickedBook);
         const overlay = createOverlay(clickedBook, bookDetails);
         document.body.append(overlay);
     });
