@@ -73,15 +73,14 @@ function createBookElement(book) {
             }
             const booksWrapper = document.createElement('section');
             booksWrapper.classList.add('book-list');
-            for (const book of books) {
+            books.forEach(book => {
                 const bookElement = createBookElement(book);
                 bookElement.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
                     const bookDetails = yield getBookDetails(book);
                     showOverlay(book, bookDetails);
                 }));
-                booksWrapper.appendChild(bookElement);
-            }
-            ;
+                booksWrapper.append(bookElement);
+            });
             wrapperElement.append(booksWrapper);
             const mainTitle = document.createElement('h1');
             mainTitle.textContent = `${books.length} Classic Childrens books`;
@@ -120,6 +119,10 @@ function overlayContent(book, bookDetails) {
     rightSideContainer.classList.add('overlay-content__right-side');
     const detailsSection = showBookDetails(bookDetails);
     rightSideContainer.append(detailsSection);
+    const linkButton = document.createElement('button');
+    linkButton.textContent = 'Oh, I want to read it!';
+    linkButton.classList.add('overlay__link-button');
+    rightSideContainer.append(linkButton);
     overlayContent.append(rightSideContainer);
     return overlayContent;
 }
@@ -135,13 +138,36 @@ function showBookDetails(bookDetails) {
     detailsContainer.classList.add('overlay-content__details-container');
     const titleElement = document.createElement('h2');
     titleElement.textContent = bookDetails.title;
-    titleElement.classList.add('overlay-content__title');
-    detailsContainer.appendChild(titleElement);
+    titleElement.classList.add('book__title');
+    detailsContainer.append(titleElement);
     const authorElement = document.createElement('p');
     authorElement.textContent = `By ${bookDetails.author}`;
-    detailsContainer.appendChild(authorElement);
+    authorElement.classList.add('book__author');
+    detailsContainer.append(authorElement);
     const descriptionElement = document.createElement('p');
     descriptionElement.textContent = bookDetails.plot;
-    detailsContainer.appendChild(descriptionElement);
+    descriptionElement.classList.add('overlay-content__details');
+    detailsContainer.append(descriptionElement);
+    const bookFactsContainer = document.createElement('section');
+    bookFactsContainer.classList.add('overlay-content__facts-container');
+    detailsContainer.append(bookFactsContainer);
+    const audienceElement = document.createElement('p');
+    audienceElement.textContent = bookDetails.audience;
+    audienceElement.classList.add('overlay-content__details');
+    bookFactsContainer.append(audienceElement);
+    const firstPublishedElement = document.createElement('p');
+    firstPublishedElement.textContent = String(bookDetails.year);
+    firstPublishedElement.classList.add('overlay-content__details');
+    bookFactsContainer.append(firstPublishedElement);
+    const pagesElement = document.createElement('p');
+    pagesElement.textContent = bookDetails.pages !== null && bookDetails.pages !== undefined
+        ? String(bookDetails.pages)
+        : 'Not available';
+    pagesElement.classList.add('overlay-content__details');
+    bookFactsContainer.append(pagesElement);
+    const publisherElement = document.createElement('p');
+    publisherElement.textContent = bookDetails.publisher;
+    publisherElement.classList.add('overlay-content__details');
+    bookFactsContainer.append(publisherElement);
     return detailsContainer;
 }
