@@ -78,7 +78,6 @@ function createBookElement(book: Book): HTMLElement {
 (async function showBooks() {
     try {
         const books = await getBooks(apiUrl);
-
         const wrapperElement = document.querySelector('.wrapper');
         // checking if wrapperElement exist
         if (!wrapperElement) {
@@ -114,6 +113,12 @@ function createBookElement(book: Book): HTMLElement {
             updateMainTitle(filteredBooks.length);
         
             booksWrapper.textContent = '';
+
+            if (filteredBooks.length === 0) {
+                const noMatchesMessage = document.createElement('p');
+                noMatchesMessage.textContent = 'No matches found!';
+                booksWrapper.append(noMatchesMessage);
+            } else {
             
             filteredBooks.forEach(book => {
                 const bookElement = createBookElement(book);
@@ -123,8 +128,10 @@ function createBookElement(book: Book): HTMLElement {
                 });
                 booksWrapper.append(bookElement);
             });
+        }
             searchInput.value = '';
         });
+   
 
         const showAllButton = document.createElement('button');
         showAllButton.textContent = 'Show All';
@@ -161,7 +168,11 @@ function createBookElement(book: Book): HTMLElement {
         }
 
         function updateMainTitle(bookCount: number): void {
-            mainTitle.textContent = bookCount > 0 ? `${bookCount} Classic Childrens books` : `Classic Childrens books`;
+            mainTitle.textContent = bookCount === 1 
+            ? `${bookCount} Classic Childrens book` 
+            : bookCount > 1
+            ? `${bookCount} Classic Childrens books` 
+            : `Classic Childrens books`;
         }
         
     } catch (error) {

@@ -93,14 +93,21 @@ function createBookElement(book) {
                     book.author.toLowerCase().includes(currentSearchTerm));
                 updateMainTitle(filteredBooks.length);
                 booksWrapper.textContent = '';
-                filteredBooks.forEach(book => {
-                    const bookElement = createBookElement(book);
-                    bookElement.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
-                        const bookDetails = yield getBookDetails(book);
-                        showOverlay(book, bookDetails);
-                    }));
-                    booksWrapper.append(bookElement);
-                });
+                if (filteredBooks.length === 0) {
+                    const noMatchesMessage = document.createElement('p');
+                    noMatchesMessage.textContent = 'No matches found!';
+                    booksWrapper.append(noMatchesMessage);
+                }
+                else {
+                    filteredBooks.forEach(book => {
+                        const bookElement = createBookElement(book);
+                        bookElement.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
+                            const bookDetails = yield getBookDetails(book);
+                            showOverlay(book, bookDetails);
+                        }));
+                        booksWrapper.append(bookElement);
+                    });
+                }
                 searchInput.value = '';
             });
             const showAllButton = document.createElement('button');
@@ -130,7 +137,11 @@ function createBookElement(book) {
                 searchInput.value = '';
             }
             function updateMainTitle(bookCount) {
-                mainTitle.textContent = bookCount > 0 ? `${bookCount} Classic Childrens books` : `Classic Childrens books`;
+                mainTitle.textContent = bookCount === 1
+                    ? `${bookCount} Classic Childrens book`
+                    : bookCount > 1
+                        ? `${bookCount} Classic Childrens books`
+                        : `Classic Childrens books`;
             }
         }
         catch (error) {
