@@ -1,23 +1,7 @@
 const apiUrl: string = 'https://my-json-server.typicode.com/zocom-christoffer-wallenberg/books-api/books'
 
-interface Book {
-    id: number;
-    title: string;
-    author: string;
-    color: string;
-  
-}
-
-interface BookDetails {
-    title: string;
-    author: string;
-    plot: string;
-    audience: string;
-    year: number;
-    pages: number;
-    publisher: string;
-
-}
+import { Book, BookDetails } from "./interfaces.js";
+import { booksData } from "./booksData.js";
 
 async function getBooks(apiUrl: string): Promise<Book[]> {
     try {
@@ -26,7 +10,7 @@ async function getBooks(apiUrl: string): Promise<Book[]> {
             throw new Error(`HTTP Error!: ${response.status}`);
         };
         const books: Book[] = await response.json();
-
+        console.log(books);
         return books;
         
     } catch (error) {
@@ -54,22 +38,16 @@ async function getBookDetails(book: Book): Promise<BookDetails> {
 
 function createBookElement(book: Book): HTMLElement {
 
-    const bookElement = document.createElement('article');
-    bookElement.classList.add('book');
+    const bookElement = createHTMLElement('article', 'book');
 
     const bookBackgroundColor = book.color || '#fff' ;
     bookElement.style.background = `
     linear-gradient(208deg, rgba(255, 255, 255, 0.50) 0%, rgba(255, 255, 255, 0.00) 92.13%), ${bookBackgroundColor}`;
 
-    const titleElement = document.createElement('h2');
-    titleElement.textContent = book.title;
-    titleElement.classList.add('book__title')
-    bookElement.append(titleElement);
-
-    const authorElement = document.createElement('p');
-    authorElement.textContent = book.author;
-    authorElement.classList.add('book__author');
-    bookElement.append(authorElement);
+    const titleElement = createHTMLElement('h2', 'book__title', book.title);
+    const authorElement = createHTMLElement('p', 'book__author', book.author);
+    
+    bookElement.append(titleElement, authorElement);
 
     return bookElement;
 
@@ -228,16 +206,24 @@ function overlayContent(book: Book, bookDetails: BookDetails): HTMLElement {
     const bookElement = createBookElement(book);
     leftSideContainer.append(bookElement);
 
-    overlayContent.append(leftSideContainer);
-
     const rightSideContainer = createHTMLElement('section', 'overlay-content__right-side');
     const detailsSection = showBookDetails(bookDetails);
-    rightSideContainer.append(detailsSection);
+    
 
     const linkButton = createHTMLElement('button', 'overlay__link-button', 'Oh, I want to read it!');
-    rightSideContainer.append(linkButton);
+    linkButton.addEventListener('click', () => {
+        const matchedBookData = booksData.find((data) => data.title === book.title);
+    
+        if (matchedBookData) {
+          window.location.href = matchedBookData.linkUrl || '#';
+        } else {
+          console.error('Book data not found for:', book.title);
+          window.location.href = 'index.html';
+        }
+        });
+    rightSideContainer.append(detailsSection, linkButton);
 
-    overlayContent.append(rightSideContainer);
+    overlayContent.append(leftSideContainer, rightSideContainer);
 
     return overlayContent;
 

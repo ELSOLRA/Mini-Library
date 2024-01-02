@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const apiUrl = 'https://my-json-server.typicode.com/zocom-christoffer-wallenberg/books-api/books';
+import { booksData } from "./booksData.js";
 function getBooks(apiUrl) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -17,6 +18,7 @@ function getBooks(apiUrl) {
             }
             ;
             const books = yield response.json();
+            console.log(books);
             return books;
         }
         catch (error) {
@@ -47,19 +49,13 @@ function getBookDetails(book) {
     });
 }
 function createBookElement(book) {
-    const bookElement = document.createElement('article');
-    bookElement.classList.add('book');
+    const bookElement = createHTMLElement('article', 'book');
     const bookBackgroundColor = book.color || '#fff';
     bookElement.style.background = `
     linear-gradient(208deg, rgba(255, 255, 255, 0.50) 0%, rgba(255, 255, 255, 0.00) 92.13%), ${bookBackgroundColor}`;
-    const titleElement = document.createElement('h2');
-    titleElement.textContent = book.title;
-    titleElement.classList.add('book__title');
-    bookElement.append(titleElement);
-    const authorElement = document.createElement('p');
-    authorElement.textContent = book.author;
-    authorElement.classList.add('book__author');
-    bookElement.append(authorElement);
+    const titleElement = createHTMLElement('h2', 'book__title', book.title);
+    const authorElement = createHTMLElement('p', 'book__author', book.author);
+    bookElement.append(titleElement, authorElement);
     return bookElement;
 }
 (function showBooks() {
@@ -183,13 +179,21 @@ function overlayContent(book, bookDetails) {
     const leftSideContainer = createHTMLElement('section', 'overlay-content__left-side');
     const bookElement = createBookElement(book);
     leftSideContainer.append(bookElement);
-    overlayContent.append(leftSideContainer);
     const rightSideContainer = createHTMLElement('section', 'overlay-content__right-side');
     const detailsSection = showBookDetails(bookDetails);
-    rightSideContainer.append(detailsSection);
     const linkButton = createHTMLElement('button', 'overlay__link-button', 'Oh, I want to read it!');
-    rightSideContainer.append(linkButton);
-    overlayContent.append(rightSideContainer);
+    linkButton.addEventListener('click', () => {
+        const matchedBookData = booksData.find((data) => data.title === book.title);
+        if (matchedBookData) {
+            window.location.href = matchedBookData.linkUrl || '#';
+        }
+        else {
+            console.error('Book data not found for:', book.title);
+            window.location.href = 'index.html';
+        }
+    });
+    rightSideContainer.append(detailsSection, linkButton);
+    overlayContent.append(leftSideContainer, rightSideContainer);
     return overlayContent;
 }
 function createOverlay(book, bookDetails) {
