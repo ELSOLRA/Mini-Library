@@ -214,12 +214,9 @@ async function showOverlay(clickedBook: Book, bookDetails: BookDetails ) {
 }
 
 function overlayContent(book: Book, bookDetails: BookDetails): HTMLElement {
-    const overlayContent = document.createElement('article');
-    overlayContent.classList.add('overlay-content');
+    const overlayContent = createHTMLElement('article', 'overlay-content');
 
-    const returnButton = document.createElement('button');
-    returnButton.textContent = '\u2190';
-    returnButton.classList.add('overlay__return-button');
+    const returnButton = createHTMLElement('button', 'overlay__return-button', '\u2190');
     
     returnButton.addEventListener('click', () => {
         overlayContent.parentElement?.remove();
@@ -227,23 +224,17 @@ function overlayContent(book: Book, bookDetails: BookDetails): HTMLElement {
 
     overlayContent.append(returnButton);
 
-    const leftSideContainer = document.createElement('section');
-    leftSideContainer.classList.add('overlay-content__left-side');
-
+    const leftSideContainer = createHTMLElement('section', 'overlay-content__left-side');
     const bookElement = createBookElement(book);
     leftSideContainer.append(bookElement);
 
     overlayContent.append(leftSideContainer);
 
-    const rightSideContainer = document.createElement('section');
-    rightSideContainer.classList.add('overlay-content__right-side');
-
+    const rightSideContainer = createHTMLElement('section', 'overlay-content__right-side');
     const detailsSection = showBookDetails(bookDetails);
     rightSideContainer.append(detailsSection);
 
-    const linkButton = document.createElement('button');
-    linkButton.textContent = 'Oh, I want to read it!';
-    linkButton.classList.add('overlay__link-button');
+    const linkButton = createHTMLElement('button', 'overlay__link-button', 'Oh, I want to read it!');
     rightSideContainer.append(linkButton);
 
     overlayContent.append(rightSideContainer);
@@ -254,8 +245,7 @@ function overlayContent(book: Book, bookDetails: BookDetails): HTMLElement {
 
 
 function createOverlay(book: Book, bookDetails: BookDetails): HTMLElement {
-    const overlay = document.createElement('section');
-    overlay.classList.add('overlay');
+    const overlay = createHTMLElement('section', 'overlay');
     const overlayContentElement = overlayContent(book, bookDetails);
     overlay.append(overlayContentElement);
 
@@ -292,7 +282,7 @@ function showBookDetails(bookDetails: BookDetails): HTMLElement {
 
 }
 
-function createHTMLElement(elementType: string, className: string, textContent: string): HTMLElement {
+function createHTMLElement(elementType: string, className: string, textContent?: string): HTMLElement {
     const element = document.createElement(elementType);
     element.classList.add(className);
     element.textContent = textContent;
