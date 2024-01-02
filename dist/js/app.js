@@ -71,22 +71,67 @@ function createBookElement(book) {
                 console.error("Wrapper element not found.");
                 return;
             }
-            const booksWrapper = document.createElement('section');
-            booksWrapper.classList.add('book-list');
-            books.forEach(book => {
-                const bookElement = createBookElement(book);
-                bookElement.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
-                    const bookDetails = yield getBookDetails(book);
-                    showOverlay(book, bookDetails);
-                }));
-                booksWrapper.append(bookElement);
-            });
-            wrapperElement.append(booksWrapper);
             const mainTitle = document.createElement('h1');
             mainTitle.textContent = `${books.length} Classic Childrens books`;
             mainTitle.classList.add('main-title');
-            wrapperElement.insertBefore(mainTitle, booksWrapper);
+            wrapperElement.append(mainTitle);
+            const searchContainer = document.createElement('section');
+            searchContainer.classList.add('search-container');
+            const searchInput = document.createElement('input');
+            searchInput.type = 'text';
+            searchInput.id = 'input';
+            searchInput.placeholder = 'Search by name or author';
+            searchContainer.appendChild(searchInput);
+            let currentSearchTerm = '';
+            const searchButton = document.createElement('button');
+            searchButton.textContent = 'Search';
+            searchContainer.appendChild(searchButton);
+            searchButton.addEventListener('click', () => {
+                currentSearchTerm = searchInput.value.toLowerCase();
+                console.log(books);
+                const filteredBooks = books.filter(book => book.title.toLowerCase().includes(currentSearchTerm) ||
+                    book.author.toLowerCase().includes(currentSearchTerm));
+                updateMainTitle(filteredBooks.length);
+                booksWrapper.textContent = '';
+                filteredBooks.forEach(book => {
+                    const bookElement = createBookElement(book);
+                    bookElement.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
+                        const bookDetails = yield getBookDetails(book);
+                        showOverlay(book, bookDetails);
+                    }));
+                    booksWrapper.append(bookElement);
+                });
+                searchInput.value = '';
+            });
+            const showAllButton = document.createElement('button');
+            showAllButton.textContent = 'Show All';
+            searchContainer.appendChild(showAllButton);
+            showAllButton.addEventListener('click', () => {
+                displayAllBooks();
+                updateMainTitle(books.length);
+            });
+            searchContainer.append(showAllButton);
+            wrapperElement.append(searchContainer);
+            const booksWrapper = document.createElement('section');
+            booksWrapper.classList.add('book-list');
+            wrapperElement.append(booksWrapper);
+            updateMainTitle(0);
             console.log("Books:", books);
+            function displayAllBooks() {
+                booksWrapper.textContent = '';
+                books.forEach(book => {
+                    const bookElement = createBookElement(book);
+                    bookElement.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
+                        const bookDetails = yield getBookDetails(book);
+                        showOverlay(book, bookDetails);
+                    }));
+                    booksWrapper.append(bookElement);
+                });
+                searchInput.value = '';
+            }
+            function updateMainTitle(bookCount) {
+                mainTitle.textContent = bookCount > 0 ? `${bookCount} Classic Childrens books` : `Classic Childrens books`;
+            }
         }
         catch (error) {
             console.error("Error message:", error.message);
