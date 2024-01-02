@@ -268,51 +268,35 @@ function showBookDetails(bookDetails: BookDetails): HTMLElement {
     const detailsContainer = document.createElement('section');
     detailsContainer.classList.add('overlay-content__details-container');
     
-    const titleElement = document.createElement('h2');
-    titleElement.textContent = bookDetails.title;
-    titleElement.classList.add('book__title');
-    detailsContainer.append(titleElement);
+    const titleElement = createHTMLElement('h2', 'book__title', bookDetails.title);
+    const authorElement = createHTMLElement('p', 'book__author', `By ${bookDetails.author}`);
+    const descriptionElement = createHTMLElement('p', 'overlay-content__details', bookDetails.plot);
 
-    const authorElement = document.createElement('p');
-    authorElement.textContent = `By ${bookDetails.author}`;
-    authorElement.classList.add('book__author');
-    detailsContainer.append(authorElement);
-
-    const descriptionElement = document.createElement('p');
-    descriptionElement.textContent = bookDetails.plot;
-    descriptionElement.classList.add('overlay-content__details');
-    detailsContainer.append(descriptionElement);
+    detailsContainer.append(titleElement, authorElement, descriptionElement);
 
     const bookFactsContainer = document.createElement('section');
     bookFactsContainer.classList.add('overlay-content__facts-container');
-    detailsContainer.append(bookFactsContainer);
 
-    const audienceElement = document.createElement('p');
-    audienceElement.textContent = bookDetails.audience;
-    audienceElement.classList.add('overlay-content__details');
-    bookFactsContainer.append(audienceElement); 
+    const audienceElement = createHTMLElement('p', 'overlay-content__details', bookDetails.audience);
+    const firstPublishedElement = createHTMLElement('p', 'overlay-content__details', String(bookDetails.year));
+    const pagesElement = createHTMLElement('p', 'overlay-content__details', bookDetails.pages !== null && bookDetails.pages !== undefined
+    ? String(bookDetails.pages) : 'Not available');
 
-    const firstPublishedElement = document.createElement('p');
-    firstPublishedElement.textContent = String(bookDetails.year);
-    firstPublishedElement.classList.add('overlay-content__details');
-    bookFactsContainer.append(firstPublishedElement);
-
-    const pagesElement = document.createElement('p');
-    pagesElement.textContent = bookDetails.pages !== null && bookDetails.pages !== undefined
-    ? String(bookDetails.pages)
-    : 'Not available';
-    pagesElement.classList.add('overlay-content__details');
-    bookFactsContainer.append(pagesElement);
-
-    const publisherElement = document.createElement('p');
-    publisherElement.textContent = bookDetails.publisher;
-    publisherElement.classList.add('overlay-content__details');
+    const publisherElement = createHTMLElement('p', 'overlay-content__details', bookDetails.publisher);
     bookFactsContainer.append(publisherElement);
+
+    bookFactsContainer.append(audienceElement, firstPublishedElement, pagesElement, publisherElement);
+    detailsContainer.append(bookFactsContainer);
 
     return detailsContainer;
 
 }
 
-
+function createHTMLElement(elementType: string, className: string, textContent: string): HTMLElement {
+    const element = document.createElement(elementType);
+    element.classList.add(className);
+    element.textContent = textContent;
+    return element;
+}
 
 
