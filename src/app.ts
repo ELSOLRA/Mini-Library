@@ -85,101 +85,127 @@ function createBookElement(book: Book): HTMLElement {
             return;
         }
 
-        const mainTitle = document.createElement('h1');
-        mainTitle.textContent = `${books.length} Classic Childrens books`;
-        mainTitle.classList.add('main-title');
-        wrapperElement.append(mainTitle);
+        const mainTitle = createMainTitle(books.length);
+        const [searchContainer, searchInput] = createSearchContainerWithInput();
+        const booksWrapper = createBooksWrapper();
 
-        const searchContainer = document.createElement('section');
-        searchContainer.classList.add('search-container');
+        wrapperElement.append(mainTitle, searchContainer, booksWrapper);
 
-        const searchInput = document.createElement('input');
-        searchInput.type = 'text';
-        searchInput.id = 'input';
-        searchInput.placeholder = 'Search by name or author';
-        searchContainer.appendChild(searchInput);
-
-        let currentSearchTerm: string = '';
-
-        const searchButton: HTMLButtonElement = document.createElement('button');
-        searchButton.textContent = 'Search';
-        searchContainer.appendChild(searchButton);
-        searchButton.addEventListener('click', () => {
-            currentSearchTerm = searchInput.value.toLowerCase();
-            console.log(books);
-            const filteredBooks: Book[] = books.filter(book => book.title.toLowerCase().includes(currentSearchTerm) || 
-            book.author.toLowerCase().includes(currentSearchTerm));
-
-            updateMainTitle(filteredBooks.length);
         
-            booksWrapper.textContent = '';
+        const searchButton = createSearchButton(books, searchInput, booksWrapper, mainTitle);
+        const showAllButton = createShowAllButton(books, booksWrapper, mainTitle);
 
-            if (filteredBooks.length === 0) {
-                const noMatchesMessage = document.createElement('p');
-                noMatchesMessage.textContent = 'No matches found!';
-                booksWrapper.append(noMatchesMessage);
-            } else {
-            
-            filteredBooks.forEach(book => {
-                const bookElement = createBookElement(book);
-                bookElement.addEventListener('click', async () => {
-                    const bookDetails = await getBookDetails(book);
-                    showOverlay(book, bookDetails);
-                });
-                booksWrapper.append(bookElement);
-            });
-        }
-            searchInput.value = '';
-        });
-   
+        searchContainer.append(searchButton, showAllButton);
 
-        const showAllButton = document.createElement('button');
-        showAllButton.textContent = 'Show All';
-        searchContainer.appendChild(showAllButton);
-        showAllButton.addEventListener('click', () => {
-            displayAllBooks();
-            updateMainTitle(books.length);
-        });
-        searchContainer.append(showAllButton);
-
-        wrapperElement.append(searchContainer);
-
-        const booksWrapper = document.createElement('section');
-        booksWrapper.classList.add('book-list');
-
-        wrapperElement.append(booksWrapper);
-
-        updateMainTitle(0);
-
-        console.log("Books:", books);
-        
-        function displayAllBooks() {
-            booksWrapper.textContent = '';
-
-            books.forEach(book => {
-                const bookElement = createBookElement(book);
-                bookElement.addEventListener('click', async () => {
-                    const bookDetails = await getBookDetails(book);
-                    showOverlay(book, bookDetails);
-                });
-                booksWrapper.append(bookElement);
-            });
-            searchInput.value = '';
-        }
-
-        function updateMainTitle(bookCount: number): void {
-            mainTitle.textContent = bookCount === 1 
-            ? `${bookCount} Classic Childrens book` 
-            : bookCount > 1
-            ? `${bookCount} Classic Childrens books` 
-            : `Classic Childrens books`;
-        }
+        updateMainTitle(books.length, mainTitle);
         
     } catch (error) {
  
         console.error("Error message:", error.message);
     }
 })();
+
+
+// ------------------
+
+function createMainTitle(bookCount: number): HTMLElement {
+    const mainTitle = document.createElement('h1');
+    mainTitle.textContent = getMainTitle(bookCount);
+    mainTitle.classList.add('main-title');
+    return mainTitle;
+}
+
+function getMainTitle(bookCount: number): string {
+    return bookCount === 1
+    ? `${bookCount} Classic Childrens book` 
+    : bookCount > 1
+    ? `${bookCount} Classic Childrens books` 
+    : `Classic Childrens books`;
+}
+
+function createSearchContainerWithInput(): [HTMLElement, HTMLInputElement] {
+    const searchContainer = document.createElement('section');
+    searchContainer.classList.add('search-container');
+
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.id = 'input';
+    searchInput.placeholder = 'Search by name or author';
+
+    searchContainer.appendChild(searchInput);
+
+    return [searchContainer, searchInput];
+}
+
+function createSearchButton(books: Book[], searchInput: HTMLInputElement, booksWrapper: HTMLElement, mainTitle: HTMLElement): HTMLButtonElement {
+    const searchButton = document.createElement('button');
+    searchButton.textContent = 'Search';
+    searchButton.addEventListener('click', () => makeSearch(books, searchInput, booksWrapper, mainTitle));
+    return searchButton;
+}
+
+async function makeSearch(books: Book[], searchInput: HTMLInputElement, booksWrapper: HTMLElement, mainTitle: HTMLElement) {
+    const currentSearchTerm = searchInput.value.toLowerCase();
+    const filteredBooks = books.filter(
+        (book) => book.title.toLowerCase().includes(currentSearchTerm) || book.author.toLowerCase().includes(currentSearchTerm)
+    );
+
+    updateMainTitle(filteredBooks.length, mainTitle);
+
+    booksWrapper.textContent = '';
+
+    if (filteredBooks.length === 0) {
+        const noMatchesMessage = document.createElement('p');
+        noMatchesMessage.textContent = 'No matches found!';
+        booksWrapper.append(noMatchesMessage);
+    } else {
+        filteredBooks.forEach((book) => {
+            const bookElement = createBookElement(book);
+            bookElement.addEventListener('click', async () => {
+                const bookDetails = await getBookDetails(book);
+                showOverlay(book, bookDetails);
+            });
+            booksWrapper.append(bookElement);
+        });
+    }
+
+    searchInput.value = '';
+}
+
+function createShowAllButton(books: Book[], booksWrapper: HTMLElement, mainTitle: HTMLElement): HTMLButtonElement {
+    const showAllButton = document.createElement('button');
+    showAllButton.textContent = 'Show All';
+    showAllButton.addEventListener('click', () => {
+        displayAllBooks(books, booksWrapper, mainTitle);
+        updateMainTitle(books.length, mainTitle);
+    });
+    return showAllButton;
+}
+
+function createBooksWrapper(): HTMLElement {
+    const booksWrapper = document.createElement('section');
+    booksWrapper.classList.add('book-list');
+    return booksWrapper;
+}
+
+function displayAllBooks(books: Book[], booksWrapper: HTMLElement, mainTitle: HTMLElement) {
+    booksWrapper.textContent = '';
+
+    books.forEach((book) => {
+        const bookElement = createBookElement(book);
+        bookElement.addEventListener('click', async () => {
+            const bookDetails = await getBookDetails(book);
+            showOverlay(book, bookDetails);
+        });
+        booksWrapper.append(bookElement);
+    });
+}
+
+function updateMainTitle(bookCount: number, mainTitle: HTMLElement) {
+    mainTitle.textContent = getMainTitle(bookCount);
+}
+
+// ----------------------------------------
 
 async function showOverlay(clickedBook: Book, bookDetails: BookDetails ) {
     const overlay = createOverlay(clickedBook, bookDetails);

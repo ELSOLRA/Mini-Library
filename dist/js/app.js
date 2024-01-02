@@ -71,84 +71,101 @@ function createBookElement(book) {
                 console.error("Wrapper element not found.");
                 return;
             }
-            const mainTitle = document.createElement('h1');
-            mainTitle.textContent = `${books.length} Classic Childrens books`;
-            mainTitle.classList.add('main-title');
-            wrapperElement.append(mainTitle);
-            const searchContainer = document.createElement('section');
-            searchContainer.classList.add('search-container');
-            const searchInput = document.createElement('input');
-            searchInput.type = 'text';
-            searchInput.id = 'input';
-            searchInput.placeholder = 'Search by name or author';
-            searchContainer.appendChild(searchInput);
-            let currentSearchTerm = '';
-            const searchButton = document.createElement('button');
-            searchButton.textContent = 'Search';
-            searchContainer.appendChild(searchButton);
-            searchButton.addEventListener('click', () => {
-                currentSearchTerm = searchInput.value.toLowerCase();
-                console.log(books);
-                const filteredBooks = books.filter(book => book.title.toLowerCase().includes(currentSearchTerm) ||
-                    book.author.toLowerCase().includes(currentSearchTerm));
-                updateMainTitle(filteredBooks.length);
-                booksWrapper.textContent = '';
-                if (filteredBooks.length === 0) {
-                    const noMatchesMessage = document.createElement('p');
-                    noMatchesMessage.textContent = 'No matches found!';
-                    booksWrapper.append(noMatchesMessage);
-                }
-                else {
-                    filteredBooks.forEach(book => {
-                        const bookElement = createBookElement(book);
-                        bookElement.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
-                            const bookDetails = yield getBookDetails(book);
-                            showOverlay(book, bookDetails);
-                        }));
-                        booksWrapper.append(bookElement);
-                    });
-                }
-                searchInput.value = '';
-            });
-            const showAllButton = document.createElement('button');
-            showAllButton.textContent = 'Show All';
-            searchContainer.appendChild(showAllButton);
-            showAllButton.addEventListener('click', () => {
-                displayAllBooks();
-                updateMainTitle(books.length);
-            });
-            searchContainer.append(showAllButton);
-            wrapperElement.append(searchContainer);
-            const booksWrapper = document.createElement('section');
-            booksWrapper.classList.add('book-list');
-            wrapperElement.append(booksWrapper);
-            updateMainTitle(0);
-            console.log("Books:", books);
-            function displayAllBooks() {
-                booksWrapper.textContent = '';
-                books.forEach(book => {
-                    const bookElement = createBookElement(book);
-                    bookElement.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
-                        const bookDetails = yield getBookDetails(book);
-                        showOverlay(book, bookDetails);
-                    }));
-                    booksWrapper.append(bookElement);
-                });
-                searchInput.value = '';
-            }
-            function updateMainTitle(bookCount) {
-                mainTitle.textContent = bookCount === 1
-                    ? `${bookCount} Classic Childrens book`
-                    : bookCount > 1
-                        ? `${bookCount} Classic Childrens books`
-                        : `Classic Childrens books`;
-            }
+            const mainTitle = createMainTitle(books.length);
+            const [searchContainer, searchInput] = createSearchContainerWithInput();
+            const booksWrapper = createBooksWrapper();
+            wrapperElement.append(mainTitle, searchContainer, booksWrapper);
+            const searchButton = createSearchButton(books, searchInput, booksWrapper, mainTitle);
+            const showAllButton = createShowAllButton(books, booksWrapper, mainTitle);
+            searchContainer.append(searchButton, showAllButton);
+            updateMainTitle(books.length, mainTitle);
         }
         catch (error) {
             console.error("Error message:", error.message);
         }
     });
 })();
+function createMainTitle(bookCount) {
+    const mainTitle = document.createElement('h1');
+    mainTitle.textContent = getMainTitle(bookCount);
+    mainTitle.classList.add('main-title');
+    return mainTitle;
+}
+function getMainTitle(bookCount) {
+    return bookCount === 1
+        ? `${bookCount} Classic Childrens book`
+        : bookCount > 1
+            ? `${bookCount} Classic Childrens books`
+            : `Classic Childrens books`;
+}
+function createSearchContainerWithInput() {
+    const searchContainer = document.createElement('section');
+    searchContainer.classList.add('search-container');
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.id = 'input';
+    searchInput.placeholder = 'Search by name or author';
+    searchContainer.appendChild(searchInput);
+    return [searchContainer, searchInput];
+}
+function createSearchButton(books, searchInput, booksWrapper, mainTitle) {
+    const searchButton = document.createElement('button');
+    searchButton.textContent = 'Search';
+    searchButton.addEventListener('click', () => makeSearch(books, searchInput, booksWrapper, mainTitle));
+    return searchButton;
+}
+function makeSearch(books, searchInput, booksWrapper, mainTitle) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const currentSearchTerm = searchInput.value.toLowerCase();
+        const filteredBooks = books.filter((book) => book.title.toLowerCase().includes(currentSearchTerm) || book.author.toLowerCase().includes(currentSearchTerm));
+        updateMainTitle(filteredBooks.length, mainTitle);
+        booksWrapper.textContent = '';
+        if (filteredBooks.length === 0) {
+            const noMatchesMessage = document.createElement('p');
+            noMatchesMessage.textContent = 'No matches found!';
+            booksWrapper.append(noMatchesMessage);
+        }
+        else {
+            filteredBooks.forEach((book) => {
+                const bookElement = createBookElement(book);
+                bookElement.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
+                    const bookDetails = yield getBookDetails(book);
+                    showOverlay(book, bookDetails);
+                }));
+                booksWrapper.append(bookElement);
+            });
+        }
+        searchInput.value = '';
+    });
+}
+function createShowAllButton(books, booksWrapper, mainTitle) {
+    const showAllButton = document.createElement('button');
+    showAllButton.textContent = 'Show All';
+    showAllButton.addEventListener('click', () => {
+        displayAllBooks(books, booksWrapper, mainTitle);
+        updateMainTitle(books.length, mainTitle);
+    });
+    return showAllButton;
+}
+function createBooksWrapper() {
+    const booksWrapper = document.createElement('section');
+    booksWrapper.classList.add('book-list');
+    return booksWrapper;
+}
+function displayAllBooks(books, booksWrapper, mainTitle) {
+    booksWrapper.textContent = '';
+    books.forEach((book) => {
+        const bookElement = createBookElement(book);
+        bookElement.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
+            const bookDetails = yield getBookDetails(book);
+            showOverlay(book, bookDetails);
+        }));
+        booksWrapper.append(bookElement);
+    });
+}
+function updateMainTitle(bookCount, mainTitle) {
+    mainTitle.textContent = getMainTitle(bookCount);
+}
 function showOverlay(clickedBook, bookDetails) {
     return __awaiter(this, void 0, void 0, function* () {
         const overlay = createOverlay(clickedBook, bookDetails);
