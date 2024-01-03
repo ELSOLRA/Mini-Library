@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,200;0,600;0,700;0,800;0,900;1,200;1,800&family=Lora&family=Roboto+Condensed:wght@300&family=Roboto:wght@900&family=Secular+One&display=swap');
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -10,7 +12,7 @@ body {
 }
 
 .main-title {
-    margin: 0;
+    margin: 1rem auto;
 }
 
 .wrapper {
@@ -18,7 +20,56 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    min-height: 100vh;
+    min-width: 17.5rem;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: center;
+    
+}
+
+#input {
+    background: rgb(247, 228, 228);
+    height: 4vh;
+    min-height: 2rem;
+    font-size: 1.2rem; 
+    font-weight: bold;
+    border-radius: 2%/10%;
+    border-color: rgba(0, 0, 0, 0.5);
+}
+    
+#input:focus {
+    border-color: rgb(255, 196, 0);
+    outline: none;
+}
+
+.button-search,
+.button-show-all {
+    background: #ffd819;
+    color: #ffffff;
+    margin-left: 1vw;
+    height: 2rem;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    border-radius: 20px;
+    border: 2px solid #ffd819;
+    
+}
+
+.button-search:hover,
+.button-show-all:hover {
+    background: #fff;
+    color: #ffd819
 }
 
 .book-list {
@@ -35,6 +86,7 @@ body {
 
     @media(max-width: 480px) {
         grid-template-columns: repeat(2, 1fr);
+
     }
 
     @media(max-width: 320px) {
@@ -44,7 +96,6 @@ body {
 
 .book {
     background-color: #fff;
-    border: 1px solid #ccc;
     width: 12.5rem;
     height: 15rem;
     padding: 1.2rem;
@@ -59,8 +110,12 @@ body {
 }
 
 .overlay-content .book  {
+    width: auto;
+    height: auto;
     transform: none;
-    cursor:auto;
+    cursor: auto;
+    flex: 1;
+
 }
 
 .overlay {
@@ -73,9 +128,115 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: auto;
 }
 
 .overlay-content {
-    background-color: beige;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
 }
 
+.return-button {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    border: none;
+    outline: 0.2rem solid rgba(138, 138, 138, 0.3);
+    background: #8A8A8A;
+}
+
+.return-button:hover {
+    box-shadow: 0 2px 4px rgb(255, 255, 255, 0.5);
+}
+
+.return-button__arrows-container{
+    display: flex;
+    justify-content: center;
+    transform: translate(4%, 0);
+}
+
+.return-button__arrow {
+    display: block;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-top: 0.188rem solid white;
+    border-left: 0.188rem solid white;
+    transform: rotate(-45deg);
+    animation: animate 5s infinite;
+}
+
+.return-button__arrow:nth-child(2) {
+    animation-delay: -0.3s;
+}
+
+.return-button__arrow:nth-child(3) {
+    animation-delay: -0.5s;
+}
+
+.overlay-content__main-container {
+ 
+    display: flex;
+    gap: 5%;
+    @media (max-width: 800px) {
+    
+        flex-direction: column;
+        align-items: flex-start;
+        max-height: 100vh;
+        min-width: 100%;
+        margin: 5px;
+    }
+}
+
+.overlay-content__left-side,
+.overlay-content__right-side {
+    display: flex;
+    width: 24rem;
+    min-height: 29rem;
+
+@media (max-width: 420px) {
+    width: 100%; 
+
+}
+
+.overlay-content__details-container {
+    color: white;
+    flex: 1;
+}
+}
+
+
+@keyframes animate {
+    0% {
+        opacity: 0;
+        transform: rotate(-45deg) translate(0.125rem, 0.125rem);
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: rotate(-45deg) translate(-0.125rem, -0.125rem);
+    }
+}
+
+.css-button-fully-rounded--yellow {
+    min-width: 130px;
+    height: 40px;
+    color: #fff;
+    padding: 5px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+    outline: none;
+    border-radius: 20px;
+    border: 2px solid #ffd819;
+    background: #ffd819;
+  }
+  .css-button-fully-rounded--yellow:hover {
+    background: #fff;
+    color: #ffd819
+  }

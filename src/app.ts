@@ -38,14 +38,14 @@ async function getBookDetails(book: Book): Promise<BookDetails> {
 
 function createBookElement(book: Book): HTMLElement {
 
-    const bookElement = createHTMLElement('article', 'book');
+    const bookElement:HTMLElement = createHTMLElement('article', 'book');
 
-    const bookBackgroundColor = book.color || '#fff' ;
+    const bookBackgroundColor: string = book.color || '#fff' ;
     bookElement.style.background = `
     linear-gradient(208deg, rgba(255, 255, 255, 0.50) 0%, rgba(255, 255, 255, 0.00) 92.13%), ${bookBackgroundColor}`;
 
-    const titleElement = createHTMLElement('h2', 'book__title', book.title);
-    const authorElement = createHTMLElement('p', 'book__author', book.author);
+    const titleElement: HTMLElement = createHTMLElement('h2', 'book__title', book.title);
+    const authorElement: HTMLParagraphElement = createParagraph('book__author', book.author);
     
     bookElement.append(titleElement, authorElement);
 
@@ -55,8 +55,8 @@ function createBookElement(book: Book): HTMLElement {
 
 (async function showBooks() {
     try {
-        const books = await getBooks(apiUrl);
-        const wrapperElement = document.querySelector('.wrapper');
+        const books:Book[] = await getBooks(apiUrl);
+        const wrapperElement:HTMLElement = document.querySelector('.wrapper');
         // checking if wrapperElement exist
         if (!wrapperElement) {
             console.error("Wrapper element not found.");
@@ -116,8 +116,7 @@ function createSearchContainerWithInput(): [HTMLElement, HTMLInputElement] {
 }
 
 function createSearchButton(books: Book[], searchInput: HTMLInputElement, booksWrapper: HTMLElement, mainTitle: HTMLElement): HTMLButtonElement {
-    const searchButton = document.createElement('button');
-    searchButton.textContent = 'Search';
+    const searchButton: HTMLButtonElement = createButton('button-search', 'Search');
     searchButton.addEventListener('click', () => makeSearch(books, searchInput, booksWrapper, mainTitle));
     return searchButton;
 }
@@ -133,8 +132,7 @@ async function makeSearch(books: Book[], searchInput: HTMLInputElement, booksWra
     booksWrapper.textContent = '';
 
     if (filteredBooks.length === 0) {
-        const noMatchesMessage = document.createElement('p');
-        noMatchesMessage.textContent = 'No matches found!';
+        const noMatchesMessage: HTMLParagraphElement = createParagraph('book-list__message', 'No matches found!');
         booksWrapper.append(noMatchesMessage);
     } else {
         filteredBooks.forEach((book) => {
@@ -151,8 +149,7 @@ async function makeSearch(books: Book[], searchInput: HTMLInputElement, booksWra
 }
 
 function createShowAllButton(books: Book[], booksWrapper: HTMLElement, mainTitle: HTMLElement): HTMLButtonElement {
-    const showAllButton = document.createElement('button');
-    showAllButton.textContent = 'Show All';
+    const showAllButton: HTMLButtonElement = createButton('button-show-all', 'Show All');
     showAllButton.addEventListener('click', () => {
         displayAllBooks(books, booksWrapper, mainTitle);
         updateMainTitle(books.length, mainTitle);
@@ -194,36 +191,35 @@ async function showOverlay(clickedBook: Book, bookDetails: BookDetails ) {
 function overlayContent(book: Book, bookDetails: BookDetails): HTMLElement {
     const overlayContent = createHTMLElement('article', 'overlay-content');
 
-    const returnButton = createHTMLElement('button', 'overlay__return-button', '\u2190');
-    
+    const returnButton: HTMLButtonElement = createButton('return-button');
+    const returnArrows = createHTMLElement('section', 'return-button__arrows-container');
+    const firstArrrow = createHTMLElement('span', 'return-button__arrow');
+    const secondArrrow = createHTMLElement('span', 'return-button__arrow');
+    const thirdArrrow = createHTMLElement('span', 'return-button__arrow');
+
     returnButton.addEventListener('click', () => {
         overlayContent.parentElement?.remove();
     });
 
+    returnArrows.append(firstArrrow, secondArrrow, thirdArrrow);
+    returnButton.append(returnArrows);
     overlayContent.append(returnButton);
+
+    const mainContainer = createHTMLElement('section', 'overlay-content__main-container');
 
     const leftSideContainer = createHTMLElement('section', 'overlay-content__left-side');
     const bookElement = createBookElement(book);
     leftSideContainer.append(bookElement);
 
     const rightSideContainer = createHTMLElement('section', 'overlay-content__right-side');
-    const detailsSection = showBookDetails(bookDetails);
+    const detailsSection = showBookDetails(book, bookDetails);
     
 
-    const linkButton = createHTMLElement('button', 'overlay__link-button', 'Oh, I want to read it!');
-    linkButton.addEventListener('click', () => {
-        const matchedBookData = booksData.find((data) => data.title === book.title);
     
-        if (matchedBookData) {
-          window.location.href = matchedBookData.linkUrl || '#';
-        } else {
-          console.error('Book data not found for:', book.title);
-          window.location.href = 'index.html';
-        }
-        });
-    rightSideContainer.append(detailsSection, linkButton);
+    rightSideContainer.append(detailsSection);
 
-    overlayContent.append(leftSideContainer, rightSideContainer);
+    mainContainer.append(leftSideContainer, rightSideContainer);
+    overlayContent.append(mainContainer);
 
     return overlayContent;
 
@@ -239,30 +235,41 @@ function createOverlay(book: Book, bookDetails: BookDetails): HTMLElement {
 }
 
 
-function showBookDetails(bookDetails: BookDetails): HTMLElement {
+function showBookDetails(book: Book, bookDetails: BookDetails): HTMLElement {
    
-    const detailsContainer = document.createElement('section');
-    detailsContainer.classList.add('overlay-content__details-container');
+    const detailsContainer = createHTMLElement('section', 'overlay-content__details-container' );
     
     const titleElement = createHTMLElement('h2', 'book__title', bookDetails.title);
-    const authorElement = createHTMLElement('p', 'book__author', `By ${bookDetails.author}`);
-    const descriptionElement = createHTMLElement('p', 'overlay-content__details', bookDetails.plot);
+    const authorElement: HTMLParagraphElement = createParagraph('book__author', `By ${bookDetails.author}`);
+    const descriptionElement: HTMLParagraphElement = createParagraph('overlay-content__details', bookDetails.plot);
 
     detailsContainer.append(titleElement, authorElement, descriptionElement);
 
     const bookFactsContainer = document.createElement('section');
     bookFactsContainer.classList.add('overlay-content__facts-container');
 
-    const audienceElement = createHTMLElement('p', 'overlay-content__details', bookDetails.audience);
-    const firstPublishedElement = createHTMLElement('p', 'overlay-content__details', String(bookDetails.year));
-    const pagesElement = createHTMLElement('p', 'overlay-content__details', bookDetails.pages !== null && bookDetails.pages !== undefined
+    const audienceElement: HTMLParagraphElement = createParagraph('overlay-content__details', bookDetails.audience);
+    const firstPublishedElement: HTMLParagraphElement = createParagraph('overlay-content__details', String(bookDetails.year));
+    const pagesElement: HTMLParagraphElement = createParagraph('overlay-content__details', bookDetails.pages !== null && bookDetails.pages !== undefined
     ? String(bookDetails.pages) : 'Not available');
 
-    const publisherElement = createHTMLElement('p', 'overlay-content__details', bookDetails.publisher);
+    const publisherElement: HTMLParagraphElement = createParagraph('overlay-content__details', bookDetails.publisher);
     bookFactsContainer.append(publisherElement);
 
+    const linkButton = createHTMLElement('button', 'overlay__link-button', 'Oh, I want to read it!');
+    linkButton.addEventListener('click', () => {
+        const matchedBookData = booksData.find((data) => data.title === book.title);
+    
+        if (matchedBookData) {
+          window.location.href = matchedBookData.linkUrl || '#';
+        } else {
+          console.error('Book data not found for:', book.title);
+          window.location.href = 'index.html';
+        }
+        });
+
     bookFactsContainer.append(audienceElement, firstPublishedElement, pagesElement, publisherElement);
-    detailsContainer.append(bookFactsContainer);
+    detailsContainer.append(titleElement, authorElement, descriptionElement, bookFactsContainer, linkButton);
 
     return detailsContainer;
 
@@ -275,4 +282,16 @@ function createHTMLElement(elementType: string, className: string, textContent?:
     return element;
 }
 
+function createButton(className: string, textContent?: string): HTMLButtonElement {
+    const button = document.createElement('button');
+    button.classList.add(className);
+    button.textContent = textContent;
+    return button;
+  }
 
+  function createParagraph(className: string, textContent?: string): HTMLParagraphElement {
+    const element = document.createElement('p');
+    element.classList.add(className);
+    element.textContent = textContent;
+    return element;
+}
