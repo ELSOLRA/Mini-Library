@@ -7,48 +7,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import { getBooks, getBookDetails } from "./api.js";
+import { createHTMLElement, createButton, createParagraph } from "./elementBuilders.js";
+import { showOverlay } from "./overlay.js";
 const apiUrl = 'https://my-json-server.typicode.com/zocom-christoffer-wallenberg/books-api/books';
-import { booksData } from "./booksData.js";
-function getBooks(apiUrl) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const response = yield fetch(apiUrl);
-            if (!response.ok) {
-                throw new Error(`HTTP Error!: ${response.status}`);
-            }
-            ;
-            const books = yield response.json();
-            console.log(books);
-            return books;
-        }
-        catch (error) {
-            console.error("Error fetching books:", error);
-            throw error;
-        }
-        ;
-    });
-}
-;
-function getBookDetails(book) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const response = yield fetch(`${apiUrl}/${book.id}`);
-            if (!response.ok) {
-                throw new Error(`HTTP Error!: ${response.status}`);
-            }
-            ;
-            const bookDetails = yield response.json();
-            console.log(bookDetails);
-            return bookDetails;
-        }
-        catch (error) {
-            console.error("Error fetching book details:", error);
-            throw error;
-        }
-        ;
-    });
-}
-function createBookElement(book) {
+export function createBookElement(book) {
     const bookElement = createHTMLElement('article', 'book');
     const bookBackgroundColor = book.color || '#fff';
     bookElement.style.background = `
@@ -158,88 +121,4 @@ function displayAllBooks(books, booksWrapper, mainTitle) {
 }
 function updateMainTitle(bookCount, mainTitle) {
     mainTitle.textContent = getMainTitle(bookCount);
-}
-function showOverlay(clickedBook, bookDetails) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const overlay = createOverlay(clickedBook, bookDetails);
-        document.body.append(overlay);
-    });
-}
-function overlayContent(book, bookDetails) {
-    const overlayContent = createHTMLElement('article', 'overlay-content');
-    const returnButton = createButton('return-button');
-    const returnArrows = createHTMLElement('section', 'return-button__arrows-container');
-    const firstArrrow = createHTMLElement('span', 'return-button__arrow');
-    const secondArrrow = createHTMLElement('span', 'return-button__arrow');
-    const thirdArrrow = createHTMLElement('span', 'return-button__arrow');
-    returnButton.addEventListener('click', () => {
-        var _a;
-        (_a = overlayContent.parentElement) === null || _a === void 0 ? void 0 : _a.remove();
-    });
-    returnArrows.append(firstArrrow, secondArrrow, thirdArrrow);
-    returnButton.append(returnArrows);
-    overlayContent.append(returnButton);
-    const mainContainer = createHTMLElement('section', 'overlay-content__main-container');
-    const leftSideContainer = createHTMLElement('section', 'overlay-content__left-side');
-    const bookElement = createBookElement(book);
-    leftSideContainer.append(bookElement);
-    const rightSideContainer = createHTMLElement('section', 'overlay-content__right-side');
-    const detailsSection = showBookDetails(book, bookDetails);
-    rightSideContainer.append(detailsSection);
-    mainContainer.append(leftSideContainer, rightSideContainer);
-    overlayContent.append(mainContainer);
-    return overlayContent;
-}
-function createOverlay(book, bookDetails) {
-    const overlay = createHTMLElement('section', 'overlay');
-    const overlayContentElement = overlayContent(book, bookDetails);
-    overlay.append(overlayContentElement);
-    return overlay;
-}
-function showBookDetails(book, bookDetails) {
-    const detailsContainer = createHTMLElement('section', 'overlay-content__details-container');
-    const titleElement = createHTMLElement('h2', 'book__title', bookDetails.title);
-    const authorElement = createParagraph('book__author', `By ${bookDetails.author}`);
-    const descriptionElement = createParagraph('overlay-content__details', bookDetails.plot);
-    detailsContainer.append(titleElement, authorElement, descriptionElement);
-    const bookFactsContainer = document.createElement('section');
-    bookFactsContainer.classList.add('overlay-content__facts-container');
-    const audienceElement = createParagraph('overlay-content__details', bookDetails.audience);
-    const firstPublishedElement = createParagraph('overlay-content__details', String(bookDetails.year));
-    const pagesElement = createParagraph('overlay-content__details', bookDetails.pages !== null && bookDetails.pages !== undefined
-        ? String(bookDetails.pages) : 'Not available');
-    const publisherElement = createParagraph('overlay-content__details', bookDetails.publisher);
-    bookFactsContainer.append(publisherElement);
-    const linkButton = createHTMLElement('button', 'overlay__link-button', 'Oh, I want to read it!');
-    linkButton.addEventListener('click', () => {
-        const matchedBookData = booksData.find((data) => data.title === book.title);
-        if (matchedBookData) {
-            window.location.href = matchedBookData.linkUrl || '#';
-        }
-        else {
-            console.error('Book data not found for:', book.title);
-            window.location.href = 'index.html';
-        }
-    });
-    bookFactsContainer.append(audienceElement, firstPublishedElement, pagesElement, publisherElement);
-    detailsContainer.append(titleElement, authorElement, descriptionElement, bookFactsContainer, linkButton);
-    return detailsContainer;
-}
-function createHTMLElement(elementType, className, textContent) {
-    const element = document.createElement(elementType);
-    element.classList.add(className);
-    element.textContent = textContent;
-    return element;
-}
-function createButton(className, textContent) {
-    const button = document.createElement('button');
-    button.classList.add(className);
-    button.textContent = textContent;
-    return button;
-}
-function createParagraph(className, textContent) {
-    const element = document.createElement('p');
-    element.classList.add(className);
-    element.textContent = textContent;
-    return element;
 }
