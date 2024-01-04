@@ -1,11 +1,12 @@
+//------ Information for a book
 export interface Book {
     id: number;
     title: string;
     author: string;
-    color: string;
-  
+    color: string;  
 }
 
+//------ Detailed information about a book
 export interface BookDetails {
     title: string;
     author: string;
@@ -14,5 +15,4 @@ export interface BookDetails {
     year: number;
     pages?: number | null;
     publisher: string;
-
 }

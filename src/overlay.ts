@@ -3,11 +3,13 @@ import { Book, BookDetails } from "./interfaces.js";
 import { createBookElement } from "./elementBuilders.js";
 import { booksData } from "./booksData.js";
 
+//------ Function to show an overlay with detailed information about a book
 export async function showOverlay(clickedBook: Book, bookDetails: BookDetails ): Promise<void> {
     const overlay: HTMLElement = createOverlay(clickedBook, bookDetails);
     document.body.append(overlay);
 };
 
+//------ Function that creates and returns the content of the overlay with buttons, book details, and links
 export function overlayContent(book: Book, bookDetails: BookDetails): HTMLElement {
     const overlayContent: HTMLElement = createHTMLElement('article', 'overlay-content');
 
@@ -44,6 +46,7 @@ export function overlayContent(book: Book, bookDetails: BookDetails): HTMLElemen
     return overlayContent;
 };
 
+//------ Function that creates an overlay element with the provided overlay content
 function createOverlay(book: Book, bookDetails: BookDetails): HTMLElement {
     const overlay: HTMLElement = createHTMLElement('section', 'overlay');
     const overlayContentElement: HTMLElement = overlayContent(book, bookDetails);
@@ -52,6 +55,7 @@ function createOverlay(book: Book, bookDetails: BookDetails): HTMLElement {
     return overlay;
 };
 
+//------ Function that creates and returns HTML elements book details
 function showBookDetails(book: Book, bookDetails: BookDetails): HTMLElement {
    
     const detailsContainer: HTMLElement = createHTMLElement('section', 'overlay-content__details-container' );

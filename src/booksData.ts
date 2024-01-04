@@ -1,3 +1,4 @@
+//------ An array of book data to match and link url
 export const booksData: { title: string; linkUrl: string }[] = [
     { title: 'Goodnight Moon', linkUrl: 'https://fliphtml5.com/juzlf/ngmp/basic' },
     { title: 'The Very Hungry Caterpillar', linkUrl: 'https://fliphtml5.com/hwluh/nuxe/The_Very_Hungry_Caterpillar/' },

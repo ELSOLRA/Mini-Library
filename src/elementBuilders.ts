@@ -1,7 +1,7 @@
 import { Book } from "./interfaces.js";
 import { getMainTitle } from "./updateTitle.js";
 
-
+//------ Function to create a book element with properties
 export function createBookElement(book: Book): HTMLElement {
 
     const bookElement:HTMLElement = createHTMLElement('article', 'book');
@@ -19,12 +19,14 @@ export function createBookElement(book: Book): HTMLElement {
 
 };
 
+//------ Function to create wrapper for a list of books
 export function createBooksWrapper(): HTMLElement {
     const booksWrapper: HTMLElement = document.createElement('section');
     booksWrapper.classList.add('book-list');
     return booksWrapper;
 };
 
+//------ Function to create a search container with an input element
 export function createSearchContainerWithInput(): [HTMLElement, HTMLInputElement] {
     const searchContainer: HTMLElement = document.createElement('section');
     searchContainer.classList.add('search-container');
@@ -39,6 +41,7 @@ export function createSearchContainerWithInput(): [HTMLElement, HTMLInputElement
     return [searchContainer, searchInput];
 };
 
+//------ Function to create a main title element with the count of books
 export function createMainTitle(bookCount: number): HTMLElement {
     const mainTitle: HTMLElement = document.createElement('h1');
     mainTitle.textContent = getMainTitle(bookCount);
@@ -46,6 +49,7 @@ export function createMainTitle(bookCount: number): HTMLElement {
     return mainTitle;
 }
 
+//------ Function to create a HTML element with optional text content
 export function createHTMLElement(elementType: string, className: string, textContent?: string): HTMLElement {
     const element: HTMLElement = document.createElement(elementType);
     element.classList.add(className);
@@ -53,6 +57,7 @@ export function createHTMLElement(elementType: string, className: string, textCo
     return element;
 };
 
+//------ Function to create a button element with optional text content
 export function createButton(className: string, textContent?: string): HTMLButtonElement {
     const button: HTMLButtonElement = document.createElement('button');
     button.classList.add(className);
@@ -60,6 +65,7 @@ export function createButton(className: string, textContent?: string): HTMLButto
     return button;
 };
 
+//------ Function to create a paragraph element with optional text content
 export function createParagraph(className: string, textContent?: string): HTMLParagraphElement {
     const element: HTMLParagraphElement = document.createElement('p');
     element.classList.add(className);

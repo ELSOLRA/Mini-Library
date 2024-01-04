@@ -2,6 +2,7 @@ import { Book, BookDetails } from "./interfaces.js";
 
 const apiUrl: string = 'https://my-json-server.typicode.com/zocom-christoffer-wallenberg/books-api/books';
 
+//------ Function to fetch a list of books
 export async function getBooks(apiUrl: string): Promise<Book[]> {
     try {
         const response: Response = await fetch(apiUrl);
@@ -18,6 +19,7 @@ export async function getBooks(apiUrl: string): Promise<Book[]> {
     };
 };
 
+//------ Function to fetch details for a specific book 
 export async function getBookDetails(book: Book): Promise<BookDetails> {
     try {
         const response: Response = await fetch(`${apiUrl}/${book.id}`);

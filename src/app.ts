@@ -6,6 +6,7 @@ import { updateMainTitle } from "./updateTitle.js";
 
 const apiUrl: string = 'https://my-json-server.typicode.com/zocom-christoffer-wallenberg/books-api/books';
 
+//------ Function to fetch and display books
 (async function showBooks() {
     try {
         const books:Book[] = await getBooks(apiUrl);

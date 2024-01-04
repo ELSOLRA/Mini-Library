@@ -351,6 +351,8 @@ body {
     color: #adb5bd;
 }
 
+/* ------ Keyframes ------ */
+
 @keyframes animate {
     0% {
         opacity: 0;
