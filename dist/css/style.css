@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,200;0,600;0,700;0,800;0,900;1,200;1,800&family=Lora&family=Roboto+Condensed:wght@300&family=Roboto:wght@900&family=Secular+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
 * {
     box-sizing: border-box;
@@ -9,6 +9,12 @@
 body {
     margin: 0;
     padding: 0;
+    font-family: 'Roboto', sans-serif;
+
+    background-image: url(/dist/assets/wallpaperchild.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+
 }
 
 .main-title {
@@ -30,6 +36,7 @@ body {
     flex-wrap: wrap;
     width: 100%;
     align-items: center;
+    margin: 0 0 1rem;
     
 }
 
@@ -95,27 +102,69 @@ body {
 }
 
 .book {
+    position: relative;
     background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
     width: 12.5rem;
     height: 15rem;
-    padding: 1.2rem;
+    padding-left: 13%;
+    padding-bottom: 8%;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
     cursor: pointer;
 }
 
+.book::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 4%;
+    width: 0.1875rem;
+    background-color: #333;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.40) 28.65%, rgba(0, 0, 0, 0.40) 67.71%, rgba(0, 0, 0, 0.00) 100%);
+    transition: none;
+}
+
 .book:hover {
     transform: scale(1.05); 
 }
 
+.book__title {
+    color: #FFF;
+    font-family: Roboto;
+    font-size: 1.125rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+.book__author {
+    color: #FFF;
+    font-family: 'Roboto';
+    font-size: 0.625rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal; 
+}
+
 .overlay-content .book  {
+    
     width: auto;
     height: auto;
     transform: none;
     cursor: auto;
     flex: 1;
+}
 
+.overlay-content .book::after {
+    width: 0.35081rem;
+}
+
+.overlay-content .book__author {
+    margin-bottom: 1.25rem;
 }
 
 .overlay {
@@ -139,6 +188,7 @@ body {
 }
 
 .return-button {
+    margin-bottom: 5%;
     width: 2.4rem;
     height: 2.4rem;
     border-radius: 50%;
@@ -148,7 +198,7 @@ body {
 }
 
 .return-button:hover {
-    box-shadow: 0 2px 4px rgb(255, 255, 255, 0.5);
+    background: #bcbaba;
 }
 
 .return-button__arrows-container{
@@ -199,11 +249,66 @@ body {
     width: 100%; 
 
 }
+}
 
 .overlay-content__details-container {
     color: white;
     flex: 1;
 }
+
+.overlay-content__details {
+    color: rgba(255, 255, 255, 0.90);
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+}
+
+.overlay-content__details-container .overlay-content__details:nth-child(1)::before {
+    content: 'Audience: ';
+}
+
+.overlay-content__details-container .overlay-content__details:nth-child(2)::before {
+    content: 'First published: ';
+}
+
+.overlay-content__details-container .overlay-content__details:nth-child(3)::before {
+    content: 'Pages: ';
+}
+
+.overlay-content__details-container .overlay-content__details:nth-child(4)::before {
+    content: 'Publisher: ';
+}
+
+.overlay-content__facts-container {
+    margin-top: 0.19rem;
+    padding: 0 1rem 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    width: 100%;
+    height: 4.375rem;
+    background: rgba(196, 196, 196, 0.08);
+}
+
+
+.overlay__link-button {
+    margin-top: 1.62rem;
+    min-width: 11.75rem;
+    height: 3rem;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 0.3rem;
+    border: 0.125rem solid #adb5bd;
+    background: #adb5bd;
+}
+
+.overlay__link-button:hover {
+    background: #fff;
+    color: #adb5bd
 }
 
 
@@ -221,22 +326,3 @@ body {
     }
 }
 
-.css-button-fully-rounded--yellow {
-    min-width: 130px;
-    height: 40px;
-    color: #fff;
-    padding: 5px 10px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    display: inline-block;
-    outline: none;
-    border-radius: 20px;
-    border: 2px solid #ffd819;
-    background: #ffd819;
-  }
-  .css-button-fully-rounded--yellow:hover {
-    background: #fff;
-    color: #ffd819
-  }
