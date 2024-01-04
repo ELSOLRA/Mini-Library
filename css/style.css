@@ -17,7 +17,7 @@ body {
     padding: 0;
     font-family: 'Roboto', sans-serif;
 
-    background-image: url(/assets/wallpaperchild.jpg);
+    background-image: url("../assets/wallpaperchild.jpg");
     background-size: cover;
     background-repeat: no-repeat;
 }
