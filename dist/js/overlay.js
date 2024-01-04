@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { createHTMLElement, createButton, createParagraph } from "./elementBuilders.js";
-import { createBookElement } from "./app.js";
+import { createBookElement } from "./elementBuilders.js";
 import { booksData } from "./booksData.js";
 export function showOverlay(clickedBook, bookDetails) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -16,6 +16,7 @@ export function showOverlay(clickedBook, bookDetails) {
         document.body.append(overlay);
     });
 }
+;
 export function overlayContent(book, bookDetails) {
     const overlayContent = createHTMLElement('article', 'overlay-content');
     const returnButton = createButton('return-button');
@@ -41,12 +42,14 @@ export function overlayContent(book, bookDetails) {
     overlayContent.append(mainContainer);
     return overlayContent;
 }
+;
 function createOverlay(book, bookDetails) {
     const overlay = createHTMLElement('section', 'overlay');
     const overlayContentElement = overlayContent(book, bookDetails);
     overlay.append(overlayContentElement);
     return overlay;
 }
+;
 function showBookDetails(book, bookDetails) {
     const detailsContainer = createHTMLElement('section', 'overlay-content__details-container');
     const titleElement = createHTMLElement('h2', 'book__title', bookDetails.title);
@@ -61,7 +64,7 @@ function showBookDetails(book, bookDetails) {
         ? String(bookDetails.pages) : 'Not available');
     const publisherElement = createParagraph('overlay-content__details', bookDetails.publisher);
     bookFactsContainer.append(publisherElement);
-    const linkButton = createHTMLElement('button', 'overlay__link-button', 'Oh, I want to read it!');
+    const linkButton = createButton('overlay__link-button', 'Oh, I want to read it!');
     linkButton.addEventListener('click', () => {
         const matchedBookData = booksData.find((data) => data.title === book.title);
         if (matchedBookData) {
@@ -71,8 +74,10 @@ function showBookDetails(book, bookDetails) {
             console.error('Book data not found for:', book.title);
             window.location.href = 'index.html';
         }
+        ;
     });
     bookFactsContainer.append(audienceElement, firstPublishedElement, pagesElement, publisherElement);
     detailsContainer.append(titleElement, authorElement, descriptionElement, bookFactsContainer, linkButton);
     return detailsContainer;
 }
+;
