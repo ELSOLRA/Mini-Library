@@ -20,11 +20,17 @@ body {
     background-image: url(/dist/assets/wallpaperchild.jpg);
     background-size: cover;
     background-repeat: no-repeat;
-
 }
 
+/* ------ Main page ------ */
+
 .main-title {
+    color: rgba(0, 0, 0, 1);
     margin: 1rem auto;
+    font-size: 2.875rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
 }
 
 .wrapper {
@@ -43,19 +49,18 @@ body {
     width: 100%;
     align-items: center;
     margin: 0 0 1rem;
-    
 }
 
 #input {
     background: rgb(247, 228, 228);
     height: 4vh;
     min-height: 2rem;
-    font-size: 1.2rem; 
+    font-size: 1.2rem;
     font-weight: bold;
     border-radius: 2%/10%;
     border-color: rgba(0, 0, 0, 0.5);
 }
-    
+
 #input:focus {
     border-color: var(--accent-color);
     outline: none;
@@ -76,7 +81,6 @@ body {
     outline: none;
     border-radius: 20px;
     border: 2px solid var(--accent-color);
-    
 }
 
 .button-search:hover,
@@ -87,12 +91,12 @@ body {
 
 .book-list {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); 
-    grid-gap: 1rem; 
-    max-width: 60rem; 
-    margin: 0 auto; 
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 1rem;
+    max-width: 60rem;
+    margin: 0 auto;
 
-  
+
     @media(max-width: 768px) {
         grid-template-columns: repeat(3, 1fr);
     }
@@ -136,28 +140,28 @@ body {
 }
 
 .book:hover {
-    transform: scale(1.05); 
+    transform: scale(1.05);
 }
 
 .book__title {
-
     font-size: 1.125rem;
     font-weight: 700;
 }
-.book__author {
 
+.book__author {
     font-size: 0.625rem;
     font-weight: 400;
 }
 
 .book__title,
 .book__author {
-   
     text-align: left;
     font-style: normal;
     color: rgb(255, 255, 255);
     line-height: normal;
 }
+
+/* ------ Overlay ------ */
 
 .overlay {
     position: fixed;
@@ -193,7 +197,7 @@ body {
     background: rgb(188, 186, 186);
 }
 
-.return-button__arrows-container{
+.return-button__arrows-container {
     display: flex;
     justify-content: center;
     transform: translate(4%, 0);
@@ -218,11 +222,11 @@ body {
 }
 
 .overlay-content__main-container {
- 
     display: flex;
     gap: 5%;
+
     @media (max-width: 800px) {
-    
+
         flex-direction: column;
         align-items: flex-start;
         max-height: 100vh;
@@ -238,12 +242,11 @@ body {
     min-height: 29rem;
 
     @media (max-width: 420px) {
-        width: 100%; 
+        width: 100%;
     }
 }
 
-.overlay-content .book  {
-    
+.overlay-content .book {
     width: auto;
     height: auto;
     transform: none;
@@ -253,14 +256,13 @@ body {
 
 .overlay-content .book .book__title {
     font-size: 2.375rem;
-    color:rgba(0, 0, 0, 0.80);
+    color: rgba(0, 0, 0, 0.80);
 }
 
 .overlay-content .book .book__author {
     font-size: 1.125rem;
     color: rgba(0, 0, 0, 0.80);
 }
-
 
 .overlay-content .book::after {
     width: 0.35081rem;
@@ -349,18 +351,18 @@ body {
     color: #adb5bd;
 }
 
-
 @keyframes animate {
     0% {
         opacity: 0;
         transform: rotate(-45deg) translate(0.125rem, 0.125rem);
     }
+
     50% {
         opacity: 1;
     }
+
     100% {
         opacity: 0;
         transform: rotate(-45deg) translate(-0.125rem, -0.125rem);
     }
 }
-
